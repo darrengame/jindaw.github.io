@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[大地]]></title>
+  <link href="http://jindaw.github.io/atom.xml" rel="self"/>
+  <link href="http://jindaw.github.io/"/>
+  <updated>2016-03-15T15:38:40+08:00</updated>
+  <id>http://jindaw.github.io/</id>
+  <author>
+    <name><![CDATA[jinda.w]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
