@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[大地]]></title>
-  <link href="http://jindaw.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Unity | 大地]]></title>
+  <link href="http://jindaw.github.io/blog/categories/unity/atom.xml" rel="self"/>
   <link href="http://jindaw.github.io/"/>
   <updated>2016-03-15T17:50:05+08:00</updated>
   <id>http://jindaw.github.io/</id>
@@ -115,15 +115,6 @@ SMTransition及其子类，提供了很多方便的切换场景（包括Screen�
 SMTransition作为基类，提供了是否异步加载场景，实际调用Unity3d API切换场景方法，但主要提供了一个动画的模板方法 DoTransition()
 例如 SMFadeTransition 类中，通过传入参数elapsedTime与配置淡入淡出参数duration计算得到当前进度，正交化进度，得到当前遮盖的alpha值，并在OnGUI绘制</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[以后要在这里记录我的编程经验了]]></title>
-    <link href="http://jindaw.github.io/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao/"/>
-    <updated>2016-03-15T16:16:48+08:00</updated>
-    <id>http://jindaw.github.io/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao</id>
-    <content type="html"><![CDATA[<p>这里是我的第一个blog地址，记录我在开发游戏过程中的经验</p>
 ]]></content>
   </entry>
   
