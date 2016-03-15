@@ -4,7 +4,7 @@
   <title><![CDATA[大地]]></title>
   <link href="http://jindaw.github.io/atom.xml" rel="self"/>
   <link href="http://jindaw.github.io/"/>
-  <updated>2016-03-15T15:57:28+08:00</updated>
+  <updated>2016-03-15T16:21:53+08:00</updated>
   <id>http://jindaw.github.io/</id>
   <author>
     <name><![CDATA[jinda.w]]></name>
@@ -12,5 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Yi Hou Yao Zai Zhe Li Ji Lu Wo De Bian Cheng Jing Yan Liao]]></title>
+    <link href="http://jindaw.github.io/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao/"/>
+    <updated>2016-03-15T00:00:00+08:00</updated>
+    <id>http://jindaw.github.io/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao</id>
+    <content type="html"><![CDATA[<hr />
+
+<p>layout: post
+title: &ldquo;以后要在这里记录我的编程经验了&rdquo;
+date: 2016-03-15 16:16:48 +0800
+comments: true</p>
+
+<h2>categories: </h2>
+
+<p>这里是我的第一个blog地址，记录我在开发游戏过程中的经验-</p>
+]]></content>
+  </entry>
   
 </feed>
