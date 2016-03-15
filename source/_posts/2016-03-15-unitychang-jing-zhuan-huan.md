@@ -3,7 +3,7 @@ layout: post
 title: "Unity场景转换"
 date: 2016-03-15 17:11:55 +0800
 comments: true
-categories: 
+categories: Unity
 ---
 #Unity 场景切换
 Unity场景切换只有一种方法，就是使用application，但是在使用的时候可以有两种方法。
