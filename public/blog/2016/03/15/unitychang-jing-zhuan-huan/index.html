@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Unity场景转换 - 大地</title>
+  <meta name="author" content="jinda.w">
+
+  
+  <meta name="description" content="Unity 场景切换
+Unity场景切换只有一种方法，就是使用application，但是在使用的时候可以有两种方法。 [TOC] 第一种方法原生application实现
+###可用api接口介绍
+1. loadedLevel: 返回最后加载关卡的索引
+2. loadedLevelName: &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jindaw.github.io/blog/2016/03/15/unitychang-jing-zhuan-huan/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="大地" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">大地</a></h1>
+  
+    <h2>天地之大，唯有coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="jindaw.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Unity场景转换</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-15T17:11:55+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:11 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1 id="unity-">Unity 场景切换</h1>
+<p>Unity场景切换只有一种方法，就是使用application，但是在使用的时候可以有两种方法。</p>
+
+<p>[TOC]</p>
+
+<h2 id="application">第一种方法原生application实现</h2>
+<p>###可用api接口介绍
+1. loadedLevel: 返回最后加载关卡的索引
+2. loadedLevelName: 返回最后加载的关卡名称
+3. isLoadingLevel: 是否正在加载关卡
+4. levelCount: 可用关卡总数
+5. LoadLevel: 加载关卡，释放当前scene
+6. LoadLevelAsync: 异步加载一个scene,可用loadingScene过渡
+7. LoadLevelAdditive: 累加一个关卡，不销毁当前scene
+8. LoadLevelAdditiveAsync: 异步加载一个scene,不释放当前scene</p>
+
+<h3 id="section">实际中使用示例</h3>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>使用Application.LoadLevel(0</td>
+          <td> </td>
+          <td>name)加载索引为0或者场景名的场景，其中的场景名需要在Unity中使用File-&gt;Build Settings…..添加场景，添加后的场景顺序就是索引。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>添加游戏Scene时，当前已经加载的对象都会被销毁，如果想不被销毁可使用Object.DontDestroyOnLoad方法保存对象。
+例如：
+      public class NewBehaviourScript2 : MonoBehaviour
+      {
+      public Texture BackImage = null;
+      private AsyncOperation async = null;</p>
+
+    <pre><code>  void Start ()
+  {
+      //此物体在下一个场景中不会被销毁
+      DontDestroyOnLoad(this);
+      //开始加载场景
+      StartCoroutine("LoadScene");
+  }
+  //异步加载
+  IEnumerator LoadScene()
+  {
+      async = Application.LoadLevelAsync("Next");
+      yield return async;
+      Debug.Log("Complete!");
+  }
+
+  void OnGUI()
+  {
+      //切换场景中的背景，可以是图片或者动画，或者其它
+      GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), BackImage);
+      //加载过程中显示进度，也可以是进度条
+      if (async != null &amp;&amp; async.isDone == false)
+      {
+          GUIStyle style = new GUIStyle();
+          style.fontSize = 48;
+          GUI.Label(new Rect(0, 200, Screen.width, 20), async.progress.ToString("F2"), style);
+      }
+
+      //在加载结束后，弹出是否下个场景，模拟手游中"触摸任意位置进入游戏"
+      if (async != null &amp;&amp; async.isDone == true)
+      {
+          if (GUI.Button(new Rect(100, 100, 100, 100), new GUIContent("跳起进入下一个场景")))
+          {
+              Destroy(this);
+          }
+      }
+  }
+  	}
+</code></pre>
+  </li>
+</ul>
+
+<h2 id="scencemanager">第二种方法使用ScenceManager插件实现封装加效果</h2>
+
+<h3 id="scenemangerscenelevelsceneconfigurationscene">SceneManger提供Scene和Level两种场景，一个是大场景转换，一个是关卡之间的场景转换。我们通过创建一个SceneConfiguration来编辑游戏中所有Scene的类别和关系。</h3>
+
+<h3 id="section-1">实现</h3>
+<p>（1）SMSceneManager
+一旦Scene Configuration创建完成之后，即可以在第一个“Screen场景”中创建出单例类SMGameEnvironment实例，其
+其构造方法中完成对SMSceneManager与SMLevelProgress实例的创建：
+（注意一定要在Screen场景中实例化SMGameEnvironment，如果是Level场景，则有可能对各个Level之间的关系有错误）
+SMSceneManager提供切换场景的接口（包括加载场景，加载关卡，加载第一个关卡）
+SMLevelProgress用以保存Level之间的关系（包括当前Level，上一Level，当前Level状态）</p>
+
+<p>（2）SMTransition
+SMTransition及其子类，提供了很多方便的切换场景（包括Screen和Level）动画效果，包括 淡入淡出，闪烁，卡通等等</p>
+
+<p>（这些动画效果都作为Prefab保存在SceneManager/Resources/Transitions/下）
+SMTransition作为基类，提供了是否异步加载场景，实际调用Unity3d API切换场景方法，但主要提供了一个动画的模板方法 DoTransition()
+例如 SMFadeTransition 类中，通过传入参数elapsedTime与配置淡入淡出参数duration计算得到当前进度，正交化进度，得到当前遮盖的alpha值，并在OnGUI绘制</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">jinda.w</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-03-15T17:11:55+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:11 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/unity/'>unity</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+  
+  	<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+<!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js"></script>
+<!-- UY END -->
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao/" title="Previous Post: 以后要在这里记录我的编程经验了">&laquo; 以后要在这里记录我的编程经验了</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/08/13/game-frame-1/" title="Next Post: 我所理解的游戏框架_UIManager">我所理解的游戏框架_UIManager &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/08/13/game-frame-1/">我所理解的游戏框架_UIManager</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/15/unitychang-jing-zhuan-huan/">Unity场景转换</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao/">以后要在这里记录我的编程经验了</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/za-tan/'>杂谈 (1)</a></li>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - jinda.w -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

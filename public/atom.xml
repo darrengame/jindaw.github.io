@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[大地]]></title>
+  <link href="http://jindaw.github.io/atom.xml" rel="self"/>
+  <link href="http://jindaw.github.io/"/>
+  <updated>2016-08-13T21:57:32+08:00</updated>
+  <id>http://jindaw.github.io/</id>
+  <author>
+    <name><![CDATA[jinda.w]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[我所理解的游戏框架_UIManager]]></title>
+    <link href="http://jindaw.github.io/blog/2016/08/13/game-frame-1/"/>
+    <updated>2016-08-13T11:54:52+08:00</updated>
+    <id>http://jindaw.github.io/blog/2016/08/13/game-frame-1</id>
+    <content type="html"><![CDATA[<h2 id="ui">UI管理类</h2>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unity场景转换]]></title>
+    <link href="http://jindaw.github.io/blog/2016/03/15/unitychang-jing-zhuan-huan/"/>
+    <updated>2016-03-15T17:11:55+08:00</updated>
+    <id>http://jindaw.github.io/blog/2016/03/15/unitychang-jing-zhuan-huan</id>
+    <content type="html"><![CDATA[<h1 id="unity-">Unity 场景切换</h1>
+<p>Unity场景切换只有一种方法，就是使用application，但是在使用的时候可以有两种方法。</p>
+
+<p>[TOC]</p>
+
+<h2 id="application">第一种方法原生application实现</h2>
+<p>###可用api接口介绍
+1. loadedLevel: 返回最后加载关卡的索引
+2. loadedLevelName: 返回最后加载的关卡名称
+3. isLoadingLevel: 是否正在加载关卡
+4. levelCount: 可用关卡总数
+5. LoadLevel: 加载关卡，释放当前scene
+6. LoadLevelAsync: 异步加载一个scene,可用loadingScene过渡
+7. LoadLevelAdditive: 累加一个关卡，不销毁当前scene
+8. LoadLevelAdditiveAsync: 异步加载一个scene,不释放当前scene</p>
+
+<h3 id="section">实际中使用示例</h3>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>使用Application.LoadLevel(0</td>
+          <td> </td>
+          <td>name)加载索引为0或者场景名的场景，其中的场景名需要在Unity中使用File-&gt;Build Settings…..添加场景，添加后的场景顺序就是索引。</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>添加游戏Scene时，当前已经加载的对象都会被销毁，如果想不被销毁可使用Object.DontDestroyOnLoad方法保存对象。
+例如：
+      public class NewBehaviourScript2 : MonoBehaviour
+      {
+      public Texture BackImage = null;
+      private AsyncOperation async = null;</p>
+
+    <pre><code>  void Start ()
+  {
+      //此物体在下一个场景中不会被销毁
+      DontDestroyOnLoad(this);
+      //开始加载场景
+      StartCoroutine("LoadScene");
+  }
+  //异步加载
+  IEnumerator LoadScene()
+  {
+      async = Application.LoadLevelAsync("Next");
+      yield return async;
+      Debug.Log("Complete!");
+  }
+
+  void OnGUI()
+  {
+      //切换场景中的背景，可以是图片或者动画，或者其它
+      GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), BackImage);
+      //加载过程中显示进度，也可以是进度条
+      if (async != null &amp;&amp; async.isDone == false)
+      {
+          GUIStyle style = new GUIStyle();
+          style.fontSize = 48;
+          GUI.Label(new Rect(0, 200, Screen.width, 20), async.progress.ToString("F2"), style);
+      }
+
+      //在加载结束后，弹出是否下个场景，模拟手游中"触摸任意位置进入游戏"
+      if (async != null &amp;&amp; async.isDone == true)
+      {
+          if (GUI.Button(new Rect(100, 100, 100, 100), new GUIContent("跳起进入下一个场景")))
+          {
+              Destroy(this);
+          }
+      }
+  }
+  	}
+</code></pre>
+  </li>
+</ul>
+
+<h2 id="scencemanager">第二种方法使用ScenceManager插件实现封装加效果</h2>
+
+<h3 id="scenemangerscenelevelsceneconfigurationscene">SceneManger提供Scene和Level两种场景，一个是大场景转换，一个是关卡之间的场景转换。我们通过创建一个SceneConfiguration来编辑游戏中所有Scene的类别和关系。</h3>
+
+<h3 id="section-1">实现</h3>
+<p>（1）SMSceneManager
+一旦Scene Configuration创建完成之后，即可以在第一个“Screen场景”中创建出单例类SMGameEnvironment实例，其
+其构造方法中完成对SMSceneManager与SMLevelProgress实例的创建：
+（注意一定要在Screen场景中实例化SMGameEnvironment，如果是Level场景，则有可能对各个Level之间的关系有错误）
+SMSceneManager提供切换场景的接口（包括加载场景，加载关卡，加载第一个关卡）
+SMLevelProgress用以保存Level之间的关系（包括当前Level，上一Level，当前Level状态）</p>
+
+<p>（2）SMTransition
+SMTransition及其子类，提供了很多方便的切换场景（包括Screen和Level）动画效果，包括 淡入淡出，闪烁，卡通等等</p>
+
+<p>（这些动画效果都作为Prefab保存在SceneManager/Resources/Transitions/下）
+SMTransition作为基类，提供了是否异步加载场景，实际调用Unity3d API切换场景方法，但主要提供了一个动画的模板方法 DoTransition()
+例如 SMFadeTransition 类中，通过传入参数elapsedTime与配置淡入淡出参数duration计算得到当前进度，正交化进度，得到当前遮盖的alpha值，并在OnGUI绘制</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[以后要在这里记录我的编程经验了]]></title>
+    <link href="http://jindaw.github.io/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao/"/>
+    <updated>2016-03-15T16:16:48+08:00</updated>
+    <id>http://jindaw.github.io/blog/2016/03/15/yi-hou-yao-zai-zhe-li-ji-lu-wo-de-bian-cheng-jing-yan-liao</id>
+    <content type="html"><![CDATA[<p>这里是我的第一个blog地址，记录我在开发游戏过程中的经验</p>
+]]></content>
+  </entry>
+  
+</feed>
