@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 游戏架构设计、lua | 大地]]></title>
+  <link href="http://jindaw.github.io/blog/categories/you-xi-jia-gou-she-ji-,-lua/atom.xml" rel="self"/>
+  <link href="http://jindaw.github.io/"/>
+  <updated>2016-08-14T09:50:34+08:00</updated>
+  <id>http://jindaw.github.io/</id>
+  <author>
+    <name><![CDATA[jinda.w]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[我所理解的游戏框架_UIManager]]></title>
+    <link href="http://jindaw.github.io/blog/2016/08/13/game-frame-1/"/>
+    <updated>2016-08-13T11:54:52+08:00</updated>
+    <id>http://jindaw.github.io/blog/2016/08/13/game-frame-1</id>
+    <content type="html"><![CDATA[<h2 id="ui">UI管理类</h2>
+<p>###UI管理类简介
+		UI管理类就是管理一个界面的显示和隐藏,把所有UI统一管理，方便游戏中调用。所以把UIManager设计成一个单例是不错的选择。
+	UIManager的结构有：初始化UI方法-initUI()，显示UI方法-showUI(name)，隐藏UI方法-hideUI(name, isDestroy)，
+	创建UI方法-createUI(name)，获取UI方法-getUI(name)，注册UI方法-setUI(name)。
+###使用方法
+		首先在游戏开始时初始化UIManager，并把所有的界面UI注册进UIManager，在要显示的地方调用showUI(name)就可以把界面显示出来，
+	界面的显示顺序是先调用先显示的次序，方法中如果界面已经创建过且没有销毁，只是隐藏，则不要重新创建。要隐藏界面时调用
+	hideUI(name, isDestroy)，参数isDestroy是决定是否移除当前UI，如果不移除只是调用隐藏方法不会被销毁，这样做的好处是下次显示同
+	样界面时不会又要重新创建，消耗时间，使游戏更加流畅，所以建议一些经常要显示的界面不销毁。
+###结束
+		这是是对每个界面进行有序的管理，使游戏的UI显示有序进行，最主要的还是每个界面要分类创建好，才可以更好的使用管理类来管理，下面就
+	介绍各个UI的创建结构</p>
+]]></content>
+  </entry>
+  
+</feed>
